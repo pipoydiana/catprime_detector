@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Prime Cat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pixel-size: 4px;
+            --bg-color: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(45deg, #111 25%, transparent 25%), 
+                linear-gradient(-45deg, #111 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #111 75%), 
+                linear-gradient(-45deg, transparent 75%, #111 75%);
+            background-size: 40px 40px;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            image-rendering: pixelated;
+        }
+
+        .pixel-border {
+            border: 4px solid #fff;
+            box-shadow: 
+                0 4px 0 #000,
+                0 -4px 0 #000,
+                4px 0 0 #000,
+                -4px 0 0 #000,
+                0 0 0 4px #000;
+            background-color: #222;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+        }
+
+        input {
+            font-family: 'Press Start 2P', cursive;
+            background: #000;
+            border: 4px solid #555;
+            color: #0f0;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            outline: none;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        button {
+            font-family: 'Press Start 2P', cursive;
+            background: #4a4a4a;
+            border: 4px solid #000;
+            box-shadow: inset -4px -4px 0 #222, inset 4px 4px 0 #888;
+            color: #fff;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-size: 12px;
+        }
+
+        button:active {
+            box-shadow: inset 4px 4px 0 #222, inset -4px -4px 0 #888;
+            transform: translateY(2px);
+        }
+
+        /* Contenedor del gato */
+        .cat-container {
+            width: 100px;
+            height: 100px;
+            margin: 30px auto;
+            position: relative;
+            display: none;
+        }
+
+        .cat-container.active {
+            display: block;
+            animation: bounce 0.4s infinite alternate;
+        }
+
+        /* Definición de los píxeles del gato */
+        .pixel-cat {
+            width: 8px;
+            height: 8px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Diseño del Gato Feliz con ojos GRANDES */
+        .happy-cat {
+            box-shadow: 
+                /* Orejas */
+                16px 0 #000, 56px 0 #000,
+                16px 8px #000, 24px 8px #000, 48px 8px #000, 56px 8px #000,
+                /* Cabeza */
+                16px 16px #000, 24px 16px #000, 32px 16px #000, 40px 16px #000, 48px 16px #000, 56px 16px #000,
+                8px 24px #000, 64px 24px #000,
+                /* OJOS GRANDES FELICES */
+                16px 24px #fff, 24px 24px #fff, 48px 24px #fff, 56px 24px #fff,
+                16px 32px #fff, 24px 32px #fff, 48px 32px #fff, 56px 32px #fff,
+                16px 24px 0 2px inset #000,
+                /* Nariz y Boca */
+                32px 32px #000, 40px 32px #000,
+                32px 40px #ffbbee, 40px 40px #ffbbee,
+                /* Cuerpo */
+                16px 48px #000, 24px 48px #000, 32px 48px #000, 40px 48px #000, 48px 48px #000, 56px 48px #000,
+                8px 56px #000, 64px 56px #000,
+                8px 64px #000, 16px 64px #000, 56px 64px #000, 64px 64px #000;
+        }
+
+        /* Diseño del Gato Triste con ojos llorosos */
+        .sad-cat {
+            box-shadow: 
+                /* Orejas */
+                16px 8px #000, 56px 8px #000,
+                16px 16px #000, 24px 16px #000, 48px 16px #000, 56px 16px #000,
+                /* OJOS GRANDES TRISTES */
+                16px 32px #fff, 24px 32px #fff, 48px 32px #fff, 56px 32px #fff,
+                16px 40px #55ccff, 24px 40px #55ccff, 48px 40px #55ccff, 56px 40px #55ccff,
+                /* Boca triste */
+                32px 48px #000, 40px 48px #000,
+                /* Cuerpo */
+                16px 56px #000, 56px 56px #000,
+                8px 64px #000, 16px 64px #000, 24px 64px #000, 32px 64px #000, 40px 64px #000, 48px 64px #000, 56px 64px #000, 64px 64px #000;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .result-text {
+            font-size: 12px;
+            margin-top: 20px;
+            line-height: 1.8;
+            min-height: 50px;
+        }
+
+        .green { color: #0f0; text-shadow: 2px 2px #004400; }
+        .red { color: #ff3333; text-shadow: 2px 2px #440000; }
+        
+        .title {
+            font-size: 16px;
+            margin-bottom: 25px;
+            color: #ffff00;
+            text-shadow: 3px 3px #888000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pixel-border">
+        <h1 class="title">CAT PRIME DETECTOR</h1>
+        
+        <input type="number" id="numInput" placeholder="¿NÚMERO?">
+        
+        <button onclick="checkPrime()">VERIFICAR</button>
+
+        <div id="catHappy" class="cat-container">
+            <div class="pixel-cat happy-cat"></div>
+        </div>
+
+        <div id="catSad" class="cat-container">
+            <div class="pixel-cat sad-cat"></div>
+        </div>
+
+        <div id="result" class="result-text"></div>
+    </div>
+
+    <script>
+        // Audio Synth para sonidos 8-bit
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'success') {
+                // Sonido alegre ascendente
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start();
+                osc.stop(now + 0.3);
+            } else {
+                // Sonido triste descendente
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(110, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start();
+                osc.stop(now + 0.4);
+            }
+        }
+
+        function isPrime(n) {
+            if (n <= 1) return false;
+            if (n <= 3) return true;
+            if (n % 2 === 0 || n % 3 === 0) return false;
+            for (let i = 5; i * i <= n; i = i + 6) {
+                if (n % i === 0 || n % (i + 2) === 0) return false;
+            }
+            return true;
+        }
+
+        function checkPrime() {
+            const input = document.getElementById('numInput');
+            const resDiv = document.getElementById('result');
+            const happy = document.getElementById('catHappy');
+            const sad = document.getElementById('catSad');
+            
+            const n = parseInt(input.value);
+
+            // Limpiar estado previo
+            happy.classList.remove('active');
+            sad.classList.remove('active');
+            resDiv.innerHTML = "";
+
+            if (isNaN(n)) {
+                resDiv.innerHTML = "¡DAME UN NÚMERO!";
+                return;
+            }
+
+            const prime = isPrime(n);
+
+            // Pequeña pausa para efecto dramático
+            setTimeout(() => {
+                if (prime) {
+                    happy.classList.add('active');
+                    resDiv.innerHTML = `<span class="green">¡ES PRIMO!<br>EL GATO ESTÁ FELIZ</span>`;
+                    playSound('success');
+                } else {
+                    sad.classList.add('active');
+                    resDiv.innerHTML = `<span class="red">NO ES PRIMO...<br>EL GATO ESTÁ TRISTE</span>`;
+                    playSound('error');
+                }
+            }, 50);
+        }
+
+        // Soporte para tecla Enter
+        document.getElementById('numInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPrime();
+        });
+    </script>
+</body>
+</html>
